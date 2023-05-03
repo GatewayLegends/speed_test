@@ -1,4 +1,4 @@
-package com.gateway.speedtest_app
+package com.gateway.speedtestapp
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
