@@ -1,4 +1,4 @@
-package com.gateway.speedtest
+package com.gateway.speedtest_app
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,7 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.gateway.speedtest.ui.theme.SpeedTestTheme
+import com.gateway.speedtest_app.ui.theme.SpeedTestTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

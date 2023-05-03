@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.gateway.speedtest'
+    namespace 'com.gateway.speedtest_app'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.gateway.speedtest"
+        applicationId "com.gateway.speedtest_app"
         minSdk 24
         targetSdk 33
         versionCode 1
