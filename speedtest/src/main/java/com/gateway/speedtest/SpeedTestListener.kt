@@ -4,8 +4,8 @@ import com.gateway.speedtest.entity.SpeedTestReport
 import com.gateway.speedtest.entity.SpeedTestExceptions
 import com.gateway.speedtest.entity.SpeedTestState
 import com.gateway.speedtest.utils.bitToMb
-import com.gateway.speedtest.entity.mapTo
-import com.gateway.speedtest.entity.toException
+import com.gateway.speedtest.utils.mapTo
+import com.gateway.speedtest.utils.toException
 import fr.bmartel.speedtest.SpeedTestReport as LibSpeedTestReport
 import fr.bmartel.speedtest.inter.ISpeedTestListener
 import fr.bmartel.speedtest.model.SpeedTestError

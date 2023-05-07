@@ -1,5 +1,13 @@
-package com.gateway.speedtest.entity
+package com.gateway.speedtest.utils
 
+import com.gateway.speedtest.entity.ConnectionError
+import com.gateway.speedtest.entity.InvalidHttpResponse
+import com.gateway.speedtest.entity.MalformedURI
+import com.gateway.speedtest.entity.SocketError
+import com.gateway.speedtest.entity.SocketTimeout
+import com.gateway.speedtest.entity.SpeedTestReport
+import com.gateway.speedtest.entity.SpeedTestState
+import com.gateway.speedtest.entity.UnsupportedProtocol
 import fr.bmartel.speedtest.SpeedTestReport as LibSpeedTestReport
 import fr.bmartel.speedtest.model.SpeedTestError
 
