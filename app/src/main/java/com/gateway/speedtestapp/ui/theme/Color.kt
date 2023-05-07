@@ -1,4 +1,4 @@
-package com.gateway.speedtest_app.ui.theme
+package com.gateway.speedtestapp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

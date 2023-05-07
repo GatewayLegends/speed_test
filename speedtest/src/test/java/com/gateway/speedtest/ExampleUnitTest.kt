@@ -1,4 +1,4 @@
-package com.gateway.speedtest_app
+package com.gateway.speedtest
 
 import org.junit.Test
 
