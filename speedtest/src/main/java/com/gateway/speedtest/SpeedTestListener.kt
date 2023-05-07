@@ -1,25 +1,25 @@
 package com.gateway.speedtest
 
-import com.gateway.speedtest.entity.MSpeedTestReport
+import com.gateway.speedtest.entity.SpeedTestReport
 import com.gateway.speedtest.entity.SpeedTestExceptions
 import com.gateway.speedtest.entity.SpeedTestState
-import com.gateway.speedtest.entity.bitToMb
+import com.gateway.speedtest.utils.bitToMb
 import com.gateway.speedtest.entity.mapTo
 import com.gateway.speedtest.entity.toException
-import fr.bmartel.speedtest.SpeedTestReport
+import fr.bmartel.speedtest.SpeedTestReport as LibSpeedTestReport
 import fr.bmartel.speedtest.inter.ISpeedTestListener
 import fr.bmartel.speedtest.model.SpeedTestError
 
 internal class SpeedTestListener(
-    private val listener: (MSpeedTestReport) -> Unit,
+    private val listener: (SpeedTestReport) -> Unit,
     private val error: (SpeedTestExceptions) -> Unit
 ) : ISpeedTestListener {
 
-    private var reportList = mutableListOf<MSpeedTestReport>()
+    private var reportList = mutableListOf<SpeedTestReport>()
     private var startTime: Long = System.currentTimeMillis()
     private var lastDownloadedPacketSizePerReportIntervalInBits: Long = 0
 
-    override fun onCompletion(report: SpeedTestReport) {
+    override fun onCompletion(report: LibSpeedTestReport) {
         // process and calculate speed test report
         val speedTestReport = processSpeedTestReport(report = report, startTime = startTime)
         reportList.add(speedTestReport)
@@ -39,7 +39,7 @@ internal class SpeedTestListener(
         listener(totalSpeedTestReport)
     }
 
-    override fun onProgress(percent: Float, report: SpeedTestReport) {
+    override fun onProgress(percent: Float, report: LibSpeedTestReport) {
         val startTime = System.currentTimeMillis()
 
         val speedTestReport = processSpeedTestReport(report = report, startTime = startTime)
@@ -52,7 +52,7 @@ internal class SpeedTestListener(
         error(speedTestError.toException())
     }
 
-    private fun processSpeedTestReport(report: SpeedTestReport, startTime: Long): MSpeedTestReport {
+    private fun processSpeedTestReport(report: LibSpeedTestReport, startTime: Long): SpeedTestReport {
         val downloadedPacketSizePerReportIntervalInBits =
             report.temporaryPacketSize - lastDownloadedPacketSizePerReportIntervalInBits
 

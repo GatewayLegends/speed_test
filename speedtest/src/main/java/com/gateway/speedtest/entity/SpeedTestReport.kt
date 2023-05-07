@@ -1,6 +1,6 @@
 package com.gateway.speedtest.entity
 
-data class MSpeedTestReport(
+data class SpeedTestReport(
     val downloadedPacketSize: Long,
     val totalPacketSize: Long,
     val transferRateBit: Long,
@@ -12,8 +12,3 @@ data class MSpeedTestReport(
     val downloadedPacketSizePerReportIntervalInBits: Long,
     val mbps: Double
 )
-
-sealed class SpeedTestState {
-    object Progress : SpeedTestState()
-    object Complete : SpeedTestState()
-}

@@ -1,6 +1,6 @@
 package com.gateway.speedtest.entity
 
-import fr.bmartel.speedtest.SpeedTestReport
+import fr.bmartel.speedtest.SpeedTestReport as LibSpeedTestReport
 import fr.bmartel.speedtest.model.SpeedTestError
 
 internal fun SpeedTestError.toException() = when (this) {
@@ -12,12 +12,12 @@ internal fun SpeedTestError.toException() = when (this) {
     SpeedTestError.UNSUPPORTED_PROTOCOL -> UnsupportedProtocol()
 }
 
-internal fun SpeedTestReport.mapTo(
+internal fun LibSpeedTestReport.mapTo(
     startTime: Long,
     speedTestState: SpeedTestState,
     downloadedPacketSizePerReportIntervalInBits: Long,
     mbps: Double
-) = MSpeedTestReport(
+) = SpeedTestReport(
     downloadedPacketSize = temporaryPacketSize,
     totalPacketSize = totalPacketSize,
     transferRateBit = transferRateBit.toLong(),

@@ -1,6 +1,6 @@
 package com.gateway.speedtest
 
-import com.gateway.speedtest.entity.MSpeedTestReport
+import com.gateway.speedtest.entity.SpeedTestReport
 import com.gateway.speedtest.entity.SpeedTestState
 import fr.bmartel.speedtest.SpeedTestSocket
 import kotlinx.coroutines.Dispatchers
@@ -16,8 +16,8 @@ class SpeedTest {
 
     @Throws(IOException::class)
     suspend fun ping(
-        packets: Int = 1,
-        link: String = "google.com",
+        packets: Int = PING_PACKETS_COUNT,
+        link: String = PING_LINK,
     ): String? = withContext(Dispatchers.IO) {
         return@withContext run {
             val runtime = Runtime.getRuntime()
@@ -44,8 +44,8 @@ class SpeedTest {
     fun download(
         link: String,
         durationMillis: Int,
-        intervalMillis: Int = 1000
-    ): Flow<MSpeedTestReport> = callbackFlow {
+        intervalMillis: Int = DOWNLOAD_INTERVAL_IN_MILLIS
+    ): Flow<SpeedTestReport> = callbackFlow {
         val speedTestSocket = SpeedTestSocket()
 
         speedTestSocket.addSpeedTestListener(SpeedTestListener(listener = {
@@ -62,10 +62,10 @@ class SpeedTest {
 
     fun upload(
         link: String,
-        fileSize: Int = 100000000,
+        fileSize: Int = UPLOAD_FILE_SIZE,
         durationMillis: Int,
-        intervalMillis: Int = 1000
-    ): Flow<MSpeedTestReport> = callbackFlow {
+        intervalMillis: Int = UPLOAD_INTERVAL_IN_MILLIS
+    ): Flow<SpeedTestReport> = callbackFlow {
         val speedTestSocket = SpeedTestSocket()
 
         speedTestSocket.addSpeedTestListener(SpeedTestListener(listener = {
@@ -78,5 +78,13 @@ class SpeedTest {
         speedTestSocket.startFixedUpload(link, fileSize, durationMillis, intervalMillis)
 
         awaitClose { speedTestSocket.closeSocket() }
+    }
+
+    companion object {
+        const val PING_LINK = "google.com"
+        const val PING_PACKETS_COUNT = 1
+        const val UPLOAD_FILE_SIZE = 100_000_000
+        const val DOWNLOAD_INTERVAL_IN_MILLIS = 1_000
+        const val UPLOAD_INTERVAL_IN_MILLIS = 1_000
     }
 }
