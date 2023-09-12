@@ -10,6 +10,7 @@ import fr.bmartel.speedtest.SpeedTestReport as LibSpeedTestReport
 import fr.bmartel.speedtest.inter.ISpeedTestListener
 import fr.bmartel.speedtest.model.SpeedTestError
 
+
 internal class SpeedTestListener(
     private val listener: (SpeedTestReport) -> Unit,
     private val error: (SpeedTestExceptions) -> Unit
