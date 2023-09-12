@@ -2,6 +2,7 @@ package com.gateway.speedtest.entity
 
 import java.io.IOException
 
+
 abstract class SpeedTestExceptions(message: String) : IOException(message)
 
 class InvalidHttpResponse : SpeedTestExceptions("Invalid http response")

@@ -7,39 +7,43 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import java.io.BufferedReader
-import java.io.IOException
 import java.io.InputStreamReader
+
 
 class SpeedTest {
 
-    @Throws(IOException::class)
     suspend fun ping(
+        link: String,
         packets: Int = PING_PACKETS_COUNT,
-        link: String = PING_LINK,
-    ): String? = withContext(Dispatchers.IO) {
-        return@withContext run {
+    ): Flow<Int> = flow {
+        runCatching {
             val runtime = Runtime.getRuntime()
-            val cmd = "/system/bin/ping -c $packets $link "
+            val cmd = "$PING_COMMAND $packets $link"
             val process = runtime.exec(cmd)
 
+            val pattern = "time=(\\d+)".toRegex()
             val inputStreamReader = InputStreamReader(process.inputStream)
             val reader = BufferedReader(inputStreamReader)
-            val line = StringBuilder()
-
+            var sum = 0
             while (reader.readLine() != null) {
-                line.append(reader.readLine())
+                val line = reader.readLine()
+                val value = pattern.find(line)?.groupValues?.getOrNull(1)
+                value?.toIntOrNull()?.let {
+                    emit(it)
+                    sum += it
+                }
             }
 
+            if (sum != 0)
+                emit(sum / packets)
+
             process.waitFor()
-            line.toString()
-                .split(" ")
-                .find { it.contains("time=") }?.let {
-                    it.substring(it.indexOf("time=") + "time=".length)
-                }
         }
-    }
+    }.flowOn(Dispatchers.IO)
+
 
     fun download(
         link: String,
@@ -48,12 +52,16 @@ class SpeedTest {
     ): Flow<SpeedTestReport> = callbackFlow {
         val speedTestSocket = SpeedTestSocket()
 
-        speedTestSocket.addSpeedTestListener(SpeedTestListener(listener = {
-            trySend(it)
+        speedTestSocket.addSpeedTestListener(
+            SpeedTestListener(
+                listener = {
+                    trySend(it)
 
-            if (it.speedTestState == SpeedTestState.Complete)
-                close()
-        }, error = { close(it) }))
+                    if (it.speedTestState == SpeedTestState.Complete)
+                        close()
+                },
+                error = { close(it) })
+        )
 
         speedTestSocket.startFixedDownload(link, durationMillis, intervalMillis)
 
@@ -68,12 +76,17 @@ class SpeedTest {
     ): Flow<SpeedTestReport> = callbackFlow {
         val speedTestSocket = SpeedTestSocket()
 
-        speedTestSocket.addSpeedTestListener(SpeedTestListener(listener = {
-            trySend(it)
+        speedTestSocket.addSpeedTestListener(
+            SpeedTestListener(
+                listener = {
+                    trySend(it)
 
-            if (it.speedTestState == SpeedTestState.Complete)
-                close()
-        }, error = { close(it) }))
+                    if (it.speedTestState == SpeedTestState.Complete)
+                        close()
+                },
+                error = { close(it) }
+            )
+        )
 
         speedTestSocket.startFixedUpload(link, fileSize, durationMillis, intervalMillis)
 
@@ -81,7 +94,7 @@ class SpeedTest {
     }
 
     companion object {
-        const val PING_LINK = "google.com"
+        const val PING_COMMAND = "/system/bin/ping -c"
         const val PING_PACKETS_COUNT = 1
         const val UPLOAD_FILE_SIZE = 100_000_000
         const val DOWNLOAD_INTERVAL_IN_MILLIS = 1_000

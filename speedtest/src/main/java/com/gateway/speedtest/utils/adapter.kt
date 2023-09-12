@@ -11,6 +11,7 @@ import com.gateway.speedtest.entity.UnsupportedProtocol
 import fr.bmartel.speedtest.SpeedTestReport as LibSpeedTestReport
 import fr.bmartel.speedtest.model.SpeedTestError
 
+
 internal fun SpeedTestError.toException() = when (this) {
     SpeedTestError.INVALID_HTTP_RESPONSE -> InvalidHttpResponse()
     SpeedTestError.SOCKET_ERROR -> SocketError()
