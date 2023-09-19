@@ -47,6 +47,9 @@ internal class SpeedTestListener(
 
         reportList.add(speedTestReport)
         listener(speedTestReport)
+
+        if (speedTestReport.progressPercent == 100f)
+            onCompletion(report)
     }
 
     override fun onError(speedTestError: SpeedTestError, errorMessage: String) {
